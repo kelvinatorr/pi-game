@@ -5,10 +5,10 @@ export var MAX_SPEED: int = 500
 export var FRICTION: int = 200
 
 var velocity: Vector2 = Vector2.ZERO
-var screen_size: Vector2
+var moving_left: bool = false
 
-func _ready():
-	screen_size = get_viewport_rect().size
+onready var animation_player: AnimationPlayer = $AnimationPlayer
+
 
 func _physics_process(delta: float) -> void:
 	var input_vector: Vector2 = Vector2.ZERO
@@ -17,15 +17,32 @@ func _physics_process(delta: float) -> void:
 	input_vector = input_vector.normalized()
 
 	if input_vector != Vector2.ZERO:
-#		animationTree.set("parameters/Idle/blend_position", input_vector)
-#		animationTree.set("parameters/Run/blend_position", input_vector)
-#		animationTree.set("parameters/Attack/blend_position", input_vector)
-#		animationState.travel("Run")
+		if input_vector.x > 0:
+			animation_player.play("SwimRight")
+			moving_left = false
+		elif input_vector.x < 0:
+			animation_player.play("SwimLeft")
+			moving_left = true
+		elif input_vector.y < 0:
+			if !moving_left:
+				animation_player.play("SwimRight")
+			else:
+				animation_player.play("SwimLeft")
+		elif input_vector.y > 0:
+			if !moving_left:
+				animation_player.play("SwimRight")
+			else:
+				animation_player.play("SwimLeft")
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
 	else:
-#		animationState.travel("Idle")
+		if !moving_left:
+			animation_player.play("SwimIdleRight")
+		else:
+			animation_player.play("SwimIdleLeft")
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 
+	# Get the velocity back so that if a collision happened then it is retained and we can change 
+	# directions faster	
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
 
-	# TODO: If a collision happened then stop it right away so we can change directions faster
+

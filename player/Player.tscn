@@ -7,7 +7,7 @@
 radius = 6.21844
 height = 14.5031
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=2]
 resource_name = "SwimIdleLeft"
 length = 10.0
 loop = true
@@ -36,7 +36,7 @@ tracks/1/keys = {
 "values": [ false ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=3]
 resource_name = "SwimIdleRight"
 length = 10.0
 loop = true
@@ -65,8 +65,7 @@ tracks/1/keys = {
 "values": [ true ]
 }
 
-[sub_resource type="Animation" id=2]
-resource_name = "SwimLeft"
+[sub_resource type="Animation" id=4]
 loop = true
 step = 0.25
 tracks/0/type = "value"
@@ -94,8 +93,7 @@ tracks/1/keys = {
 "values": [ false ]
 }
 
-[sub_resource type="Animation" id=3]
-resource_name = "SwimRight"
+[sub_resource type="Animation" id=5]
 loop = true
 step = 0.25
 tracks/0/type = "value"
@@ -124,7 +122,6 @@ tracks/1/keys = {
 }
 
 [node name="Player" type="KinematicBody2D"]
-scale = Vector2( 8, 8 )
 collision_layer = 2
 collision_mask = 5
 script = ExtResource( 2 )
@@ -132,9 +129,7 @@ script = ExtResource( 2 )
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( -0.787445, -0.15749 )
 texture = ExtResource( 1 )
-flip_h = true
 hframes = 19
-frame = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( -0.629951, 0.629427 )
@@ -142,7 +137,7 @@ rotation = 1.5708
 shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/SwimIdleLeft = SubResource( 4 )
-anims/SwimIdleRight = SubResource( 5 )
-anims/SwimLeft = SubResource( 2 )
-anims/SwimRight = SubResource( 3 )
+anims/SwimIdleLeft = SubResource( 2 )
+anims/SwimIdleRight = SubResource( 3 )
+anims/SwimLeft = SubResource( 4 )
+anims/SwimRight = SubResource( 5 )

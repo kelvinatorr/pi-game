@@ -15,22 +15,28 @@ __meta__ = {
 [node name="InfoBar" type="ColorRect" parent="HUD"]
 self_modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
-rect_min_size = Vector2( 0, 60 )
+margin_bottom = 10.0
+rect_min_size = Vector2( 0, 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HUD/InfoBar"]
 anchor_right = 1.0
-margin_bottom = 60.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 0, 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Control" type="Control" parent="HUD/InfoBar/HBoxContainer"]
+margin_bottom = 10.0
+
 [node name="TextureRect" type="TextureRect" parent="HUD/InfoBar/HBoxContainer"]
-margin_right = 60.0
-margin_bottom = 60.0
-rect_min_size = Vector2( 60, 60 )
+margin_left = 4.0
+margin_right = 14.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 10, 10 )
 texture = ExtResource( 1 )
 expand = true
 __meta__ = {
@@ -38,11 +44,11 @@ __meta__ = {
 }
 
 [node name="TextureProgress" type="TextureProgress" parent="HUD/InfoBar/HBoxContainer"]
-margin_left = 64.0
-margin_top = 15.0
-margin_right = 464.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 400, 30 )
+margin_left = 18.0
+margin_top = 3.0
+margin_right = 68.0
+margin_bottom = 7.0
+rect_min_size = Vector2( 50, 4 )
 size_flags_vertical = 4
 value = 100.0
 texture_under = ExtResource( 2 )

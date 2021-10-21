@@ -17,4 +17,5 @@ position = Vector2( 113.68, 109.865 )
 
 [node name="EnergyTimer" type="Timer" parent="."]
 
+[connection signal="movement" from="Player" to="." method="_on_Player_movement"]
 [connection signal="timeout" from="EnergyTimer" to="." method="_on_EnergyTimer_timeout"]

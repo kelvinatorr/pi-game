@@ -6,7 +6,7 @@ onready var energy_bar_tween: Tween = $HUD/InfoBar/HBoxContainer/TextureProgress
 func update_energy(val: int) -> void:
 	energy_bar.value = val
 	energy_bar_tween.interpolate_property(energy_bar, 'value',
-		energy_bar.value, val, 1,
+		energy_bar.value, val, 0.1,
 		Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	energy_bar_tween.start()
 

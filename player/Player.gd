@@ -3,12 +3,14 @@ extends KinematicBody2D
 export var ACCELERATION: int = 150
 export var MAX_SPEED: int = 250
 export var FRICTION: int = 100
+export var MOVEMENT_ENERGY_CONSUMPTION: int = 1
 
 var velocity: Vector2 = Vector2.ZERO
 var moving_left: bool = false
 
-onready var animation_player: AnimationPlayer = $AnimationPlayer
+signal movement(energy_consumption)
 
+onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 func _physics_process(delta: float) -> void:
 	var input_vector: Vector2 = Vector2.ZERO
@@ -34,6 +36,8 @@ func _physics_process(delta: float) -> void:
 			else:
 				animation_player.play("SwimLeft")
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
+		# Emit movement signal
+		emit_signal("movement", MOVEMENT_ENERGY_CONSUMPTION)
 	else:
 		if !moving_left:
 			animation_player.play("SwimIdleRight")
@@ -45,3 +49,4 @@ func _physics_process(delta: float) -> void:
 	# directions faster	
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
 
+	

@@ -45,4 +45,3 @@ func _physics_process(delta: float) -> void:
 	# directions faster	
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
 
-

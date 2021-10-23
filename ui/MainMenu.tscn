@@ -65,7 +65,7 @@ margin_top = 41.0
 margin_right = 180.0
 margin_bottom = 53.0
 custom_fonts/font = ExtResource( 4 )
-text = "Pi Game"
+text = "   Pi Game"
 align = 1
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/VBoxContainer2"]

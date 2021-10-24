@@ -15,6 +15,7 @@ onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 func _physics_process(delta: float) -> void:
 	if game_over:
+		sink_to_bottom(delta)
 		return
 	var input_vector: Vector2 = Vector2.ZERO
 	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
@@ -49,7 +50,14 @@ func _physics_process(delta: float) -> void:
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 
 	# Get the velocity back so that if a collision happened then it is retained and we can change 
-	# directions faster	
+	# directions faster
+	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
+
+func sink_to_bottom(delta: float) -> void:
+	if self.is_on_floor():
+		return
+	var sink_vector: Vector2 = Vector2.DOWN
+	velocity = velocity.move_toward(sink_vector * MAX_SPEED, 2 * delta)
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
 
 func game_over_sequence() -> void:
@@ -57,7 +65,5 @@ func game_over_sequence() -> void:
 	game_over = true
 	# Show closed eyes frame
 	animation_player.stop()
-	$Sprite.frame = 4
-	# TODO: Sink to bottom
-	
+	$Sprite.frame = 8
 	

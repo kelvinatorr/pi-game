@@ -11,9 +11,7 @@ func load_main_menu() -> void:
 
 func on_new_game_pressed() -> void:
 	$MainMenu.queue_free()
-	var game_scene = load('res://main/Game.tscn').instance()
-	game_scene.connect('game_over', self, 'show_game_over')
-	add_child(game_scene)
+	new_game()
 
 func on_quit_pressed() -> void:
 	get_tree().quit()
@@ -26,12 +24,15 @@ func show_game_over() -> void:
 	$GameOver/MarginContainer/VBoxContainer/HBoxContainer/MainMenu.connect('pressed', self, 
 		'on_main_menu_pressed')
 
+func new_game() -> void:
+	var game_scene = load('res://main/Game.tscn').instance()
+	game_scene.connect('game_over', self, 'show_game_over')
+	add_child(game_scene, true)
+
 func on_retry_pressed() -> void:
-	print('Retry')
-	# TODO: Set Energy Back to Max
-	# TODO: Re-enable movement
-	# TODO: Remove All Items
-	# TODO: Unload the Game Over Scene
+	$Game.free()
+	$GameOver.queue_free()
+	new_game()
 
 func on_main_menu_pressed() -> void:
 	$Game.queue_free()

@@ -20,9 +20,13 @@ func reduce_energy(val: int) -> void:
 		return
 	turtle_energy -= energy_per_second	
 	if turtle_energy < 0:
-		print('Game Over')
-		emit_signal("game_over")
-		$EnergyTimer.stop()
-		game_over = true
+		game_over()
 	else:
 		$UI.update_energy(turtle_energy)
+
+func game_over() -> void:
+	print('Game Over')
+	$Player.game_over_sequence()
+	emit_signal("game_over")
+	$EnergyTimer.stop()
+	game_over = true

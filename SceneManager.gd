@@ -34,6 +34,6 @@ func on_retry_pressed() -> void:
 	# TODO: Unload the Game Over Scene
 
 func on_main_menu_pressed() -> void:
-	$GameScene.queue_free()
+	$Game.queue_free()
 	$GameOver.queue_free()
 	load_main_menu()

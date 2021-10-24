@@ -7,12 +7,15 @@ export var MOVEMENT_ENERGY_CONSUMPTION: int = 1
 
 var velocity: Vector2 = Vector2.ZERO
 var moving_left: bool = false
+var game_over: bool = false
 
 signal movement(energy_consumption)
 
 onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 func _physics_process(delta: float) -> void:
+	if game_over:
+		return
 	var input_vector: Vector2 = Vector2.ZERO
 	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 	input_vector.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
@@ -49,4 +52,12 @@ func _physics_process(delta: float) -> void:
 	# directions faster	
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
 
+func game_over_sequence() -> void:
+	# Stop movement from controls
+	game_over = true
+	# Show closed eyes frame
+	animation_player.stop()
+	$Sprite.frame = 4
+	# TODO: Sink to bottom
+	
 	

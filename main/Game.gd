@@ -1,7 +1,10 @@
-extends Node2D
+extends Node
 
 var turtle_energy: int = 1000
 var energy_per_second: int = 1
+var game_over: bool = false
+
+signal game_over()
 
 func _ready() -> void:
 	$EnergyTimer.start()
@@ -12,9 +15,14 @@ func _on_EnergyTimer_timeout() -> void:
 func _on_Player_movement(energy_consumption) -> void:
 	reduce_energy(energy_consumption)
 
-func reduce_energy(val: int):
-	turtle_energy -= energy_per_second
+func reduce_energy(val: int) -> void:
+	if game_over:
+		return
+	turtle_energy -= energy_per_second	
 	if turtle_energy < 0:
 		print('Game Over')
+		emit_signal("game_over")
+		$EnergyTimer.stop()
+		game_over = true
 	else:
 		$UI.update_energy(turtle_energy)

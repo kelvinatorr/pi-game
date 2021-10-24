@@ -1,0 +1,86 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://ui/kenney-future-narrow-10-outline-1.tres" type="DynamicFont" id=1]
+[ext_resource path="res://ui/menu-button-pressed.png" type="Texture" id=2]
+[ext_resource path="res://ui/menu-button.png" type="Texture" id=3]
+
+[node name="GameOver" type="CanvasLayer"]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.294118 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 25
+custom_constants/margin_top = 25
+custom_constants/margin_left = 25
+custom_constants/margin_bottom = 25
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_left = 25.0
+margin_top = 25.0
+margin_right = 295.0
+margin_bottom = 155.0
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+margin_right = 270.0
+margin_bottom = 12.0
+custom_fonts/font = ExtResource( 1 )
+text = "Game Over"
+align = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_left = 43.0
+margin_top = 16.0
+margin_right = 227.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 4
+
+[node name="Retry" type="TextureButton" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+margin_right = 90.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 90, 20 )
+texture_normal = ExtResource( 3 )
+texture_pressed = ExtResource( 2 )
+expand = true
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/Retry"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = ExtResource( 1 )
+text = "Retry"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MainMenu" type="TextureButton" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+margin_left = 94.0
+margin_right = 184.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 90, 20 )
+texture_normal = ExtResource( 3 )
+texture_pressed = ExtResource( 2 )
+expand = true
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MainMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = ExtResource( 1 )
+text = "Main Menu"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -57,7 +57,7 @@ func sink_to_bottom(delta: float) -> void:
 	if self.is_on_floor():
 		return
 	var sink_vector: Vector2 = Vector2.DOWN
-	velocity = velocity.move_toward(sink_vector * MAX_SPEED, 2 * delta)
+	velocity = velocity.move_toward(sink_vector * (MAX_SPEED * 0.1), FRICTION * delta)
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
 
 func game_over_sequence() -> void:

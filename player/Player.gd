@@ -8,15 +8,29 @@ export var MOVEMENT_ENERGY_CONSUMPTION: int = 1
 var velocity: Vector2 = Vector2.ZERO
 var moving_left: bool = false
 var game_over: bool = false
+var state: int = State.MOVE
+
+enum State {
+	MOVE,
+	CHOMP
+}
 
 signal movement(energy_consumption)
 
 onready var animation_player: AnimationPlayer = $AnimationPlayer
+onready var chomp_collision_shape: CollisionShape2D = $ChompPivot/ChomperArea/CollisionShape2D
 
 func _physics_process(delta: float) -> void:
 	if game_over:
 		sink_to_bottom(delta)
 		return
+	match state:
+		State.MOVE:
+			move_state(delta)
+		State.CHOMP:
+			chomp_state()
+
+func move_state(delta):
 	var input_vector: Vector2 = Vector2.ZERO
 	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 	input_vector.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
@@ -52,6 +66,21 @@ func _physics_process(delta: float) -> void:
 	# Get the velocity back so that if a collision happened then it is retained and we can change 
 	# directions faster
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
+	
+	if Input.is_action_just_pressed("chomp"):
+		state = State.CHOMP
+
+func chomp_state() -> void:
+	velocity = Vector2.ZERO
+	chomp_collision_shape.disabled = false
+	if !moving_left:
+		animation_player.play("ChompRight")
+	else:
+		animation_player.play("ChompLeft")
+	# Resume execution when animation is done playing.
+	yield(animation_player, "animation_finished")
+	chomp_collision_shape.disabled = true
+	state = State.MOVE
 
 func sink_to_bottom(delta: float) -> void:
 	if self.is_on_floor():

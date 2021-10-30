@@ -16,6 +16,7 @@ enum State {
 }
 
 signal movement(energy_consumption)
+signal chomp_success(energy_value)
 
 onready var animation_player: AnimationPlayer = $AnimationPlayer
 onready var chomp_collision_shape: CollisionShape2D = $ChompPivot/ChomperArea/CollisionShape2D
@@ -95,4 +96,9 @@ func game_over_sequence() -> void:
 	# Show closed eyes frame
 	animation_player.stop()
 	$Sprite.frame = 8
-	
+
+func _on_ChomperArea_area_entered(area: Area2D):
+	var food: Node2D = area.get_parent()
+	# TODO: Spawn Heart Above Head
+	# Emit Chomp Success
+	emit_signal("chomp_success", food.ENERGY_VALUE)

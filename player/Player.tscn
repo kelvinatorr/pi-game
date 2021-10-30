@@ -258,10 +258,11 @@ rotation = 3.14159
 
 [node name="ChomperArea" type="Area2D" parent="ChompPivot"]
 position = Vector2( -11.722, -0.215 )
-monitoring = false
 collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ChompPivot/ChomperArea"]
 shape = SubResource( 8 )
 disabled = true
+
+[connection signal="area_entered" from="ChompPivot/ChomperArea" to="." method="_on_ChomperArea_area_entered"]

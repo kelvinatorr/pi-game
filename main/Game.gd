@@ -1,6 +1,7 @@
 extends Node
 
-var turtle_energy: int = 1000
+var MAX_TURTLE_ENERGY: int = 1000
+var turtle_energy: int = MAX_TURTLE_ENERGY
 var energy_per_second: int = 1
 var game_over: bool = false
 
@@ -22,10 +23,19 @@ func _on_EnergyTimer_timeout() -> void:
 func _on_Player_movement(energy_consumption) -> void:
 	reduce_energy(energy_consumption)
 
+func _on_Player_chomp_success(energy_value: int):
+	increase_energy(energy_value)
+
+func increase_energy(val: int) -> void:	
+	if turtle_energy >= MAX_TURTLE_ENERGY:
+		return
+	turtle_energy += val
+	$UI.update_energy(turtle_energy)
+
 func reduce_energy(val: int) -> void:
 	if game_over:
 		return
-	turtle_energy -= energy_per_second	
+	turtle_energy -= val
 	if turtle_energy < 0:
 		game_over()
 	else:
@@ -57,4 +67,5 @@ func generate_food(food_data: Dictionary) -> void:
 
 	var food: Node2D = load(food_data.path).instance()
 	food.position = spawn_point
-	add_child(food)
+	add_child_below_node($Player, food)
+

@@ -4,6 +4,13 @@ var turtle_energy: int = 1000
 var energy_per_second: int = 1
 var game_over: bool = false
 
+var FOOD: Dictionary = {
+	"Shrimp": {"path": "res://items/Shrimp.tscn"},
+	"Koi": {"path": ""},
+	"Green_Pellet": {"path": "res://items/GreenPellet.tscn"},
+	"Jumbo_Pellet": {"path": ""},
+}
+
 signal game_over()
 
 func _ready() -> void:
@@ -30,3 +37,24 @@ func game_over() -> void:
 	emit_signal("game_over")
 	$EnergyTimer.stop()
 	game_over = true
+
+func _physics_process(delta):
+	# get food button pressed
+	if Input.is_action_just_pressed("feed_shrimp"):
+		generate_food(FOOD["Shrimp"])
+	elif Input.is_action_just_pressed("feed_green_pellet"):
+		generate_food(FOOD["Green_Pellet"])
+	
+
+func generate_food(food_data: Dictionary) -> void:
+	# Check that TankUnderwater Level is loaded
+	var level: Node2D = get_node_or_null("TankUnderwater")
+	if not level:
+		return
+	# Generate a random vector for the food to spawn into
+	var spawn_point: Vector2 = Vector2(float(randi() % int(level.Food_Spawn_Vector.x) + 2), 
+		float(randi() % int(level.Food_Spawn_Vector.y) + 2))
+
+	var food: Node2D = load(food_data.path).instance()
+	food.position = spawn_point
+	add_child(food)

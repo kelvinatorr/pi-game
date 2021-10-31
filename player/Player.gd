@@ -9,6 +9,7 @@ var velocity: Vector2 = Vector2.ZERO
 var moving_left: bool = false
 var game_over: bool = false
 var state: int = State.MOVE
+var heart_scene: PackedScene = preload("res://items/Heart.tscn")
 
 enum State {
 	MOVE,
@@ -20,6 +21,8 @@ signal chomp_success(energy_value)
 
 onready var animation_player: AnimationPlayer = $AnimationPlayer
 onready var chomp_collision_shape: CollisionShape2D = $ChompPivot/ChomperArea/CollisionShape2D
+onready var chomper_area: Area2D = $ChompPivot/ChomperArea
+onready var chomp_pivot: Position2D = $ChompPivot
 
 func _physics_process(delta: float) -> void:
 	if game_over:
@@ -99,6 +102,13 @@ func game_over_sequence() -> void:
 
 func _on_ChomperArea_area_entered(area: Area2D):
 	var food: Node2D = area.get_parent()
-	# TODO: Spawn Heart Above Head
+	# Spawn Heart Above Head
+	var heart: Sprite = heart_scene.instance()
+	add_child(heart)
+	heart.global_position = chomper_area.global_position
+	var float_direction: int = -1
+	if abs(chomp_pivot.rotation_degrees) < 90:
+		float_direction = 1
+	heart.float_up_left_and_free(float_direction)
 	# Emit Chomp Success
 	emit_signal("chomp_success", food.ENERGY_VALUE)

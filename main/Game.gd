@@ -7,9 +7,9 @@ var game_over: bool = false
 
 var FOOD: Dictionary = {
 	"Shrimp": {"path": "res://items/Shrimp.tscn"},
-	"Koi": {"path": ""},
+	"Koi": {"path": "res://items/Koi.tscn"},
 	"Green_Pellet": {"path": "res://items/GreenPellet.tscn"},
-	"Jumbo_Pellet": {"path": ""},
+	"Jumbo_Pellet": {"path": "res://items/JumboPellet.tscn"},
 }
 
 signal game_over()
@@ -54,7 +54,10 @@ func _physics_process(delta):
 		generate_food(FOOD["Shrimp"])
 	elif Input.is_action_just_pressed("feed_green_pellet"):
 		generate_food(FOOD["Green_Pellet"])
-	
+	elif Input.is_action_just_pressed("feed_koi"):
+		generate_food(FOOD["Koi"])
+	elif Input.is_action_just_pressed("feed_jumbo_pellet"):
+		generate_food(FOOD["Jumbo_Pellet"])
 
 func generate_food(food_data: Dictionary) -> void:
 	# Check that TankUnderwater Level is loaded

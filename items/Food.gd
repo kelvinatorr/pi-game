@@ -1,4 +1,4 @@
-extends Node2D
+extends KinematicBody2D
 
 func _ready():
 	$ChompArea.connect('area_entered', self, '_on_ChompArea_area_entered')

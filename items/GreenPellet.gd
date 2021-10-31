@@ -1,3 +1,3 @@
 extends "res://items/Food.gd"
 
-export var ENERGY_VALUE: int = 1
+export var ENERGY_VALUE: int = 10

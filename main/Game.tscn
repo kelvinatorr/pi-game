@@ -19,4 +19,5 @@ position = Vector2( 113.68, 109.865 )
 
 [connection signal="chomp_success" from="Player" to="." method="_on_Player_chomp_success"]
 [connection signal="movement" from="Player" to="." method="_on_Player_movement"]
+[connection signal="pooping" from="Player" to="." method="_on_Player_pooping"]
 [connection signal="timeout" from="EnergyTimer" to="." method="_on_EnergyTimer_timeout"]

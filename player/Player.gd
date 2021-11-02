@@ -18,11 +18,13 @@ enum State {
 
 signal movement(energy_consumption)
 signal chomp_success(energy_value)
+signal pooping(butt_global_pos)
 
 onready var animation_player: AnimationPlayer = $AnimationPlayer
 onready var chomp_collision_shape: CollisionShape2D = $ChompPivot/ChomperArea/CollisionShape2D
 onready var chomper_area: Area2D = $ChompPivot/ChomperArea
 onready var chomp_pivot: Position2D = $ChompPivot
+onready var butt_position: Node2D = $ButtPivot/ButtPosition
 
 func _physics_process(delta: float) -> void:
 	if game_over:
@@ -96,6 +98,8 @@ func sink_to_bottom(delta: float) -> void:
 func game_over_sequence() -> void:
 	# Stop movement from controls
 	game_over = true
+	# Stop Poop timer so she doesn't continue to poop
+	$PoopTimer.stop()
 	# Show closed eyes frame
 	animation_player.stop()
 	$Sprite.frame = 8
@@ -112,3 +116,15 @@ func _on_ChomperArea_area_entered(area: Area2D):
 	heart.float_up_left_and_free(float_direction)
 	# Emit Chomp Success
 	emit_signal("chomp_success", food.ENERGY_VALUE)
+
+
+func _on_PoopTimer_timeout():
+	# Toss coin, if tails (less than 0.5) she poops
+	var flip_result: float = rand_range(0, 1)
+	if flip_result >= 0.5:
+		return
+	
+	print('Pooping!')
+	emit_signal("pooping", butt_position.global_position)
+	
+	

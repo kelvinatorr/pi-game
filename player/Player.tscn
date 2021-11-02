@@ -51,12 +51,24 @@ tracks/3/path = NodePath("ChompPivot:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
-tracks/3/enabled = true
+tracks/3/enabled = false
 tracks/3/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ Vector2( 0, 0 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("ButtPivot:rotation_degrees")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
 }
 
 [sub_resource type="Animation" id=3]
@@ -103,12 +115,24 @@ tracks/3/path = NodePath("ChompPivot:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
-tracks/3/enabled = true
+tracks/3/enabled = false
 tracks/3/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ Vector2( -2, 0 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("ButtPivot:rotation_degrees")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 148.0 ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -138,6 +162,18 @@ tracks/1/keys = {
 "update": 1,
 "values": [ false ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("ButtPivot:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
 
 [sub_resource type="Animation" id=5]
 length = 10.0
@@ -165,6 +201,18 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 1,
 "values": [ true ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("ButtPivot:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.00577182 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 148.0 ]
 }
 
 [sub_resource type="Animation" id=6]
@@ -194,6 +242,18 @@ tracks/1/keys = {
 "update": 1,
 "values": [ false ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("ButtPivot:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.00577182 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
 
 [sub_resource type="Animation" id=7]
 loop = true
@@ -222,6 +282,18 @@ tracks/1/keys = {
 "update": 1,
 "values": [ true ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("ButtPivot:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.00577182 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 148.0 ]
+}
 
 [sub_resource type="CircleShape2D" id=8]
 radius = 4.1493
@@ -232,14 +304,11 @@ collision_mask = 5
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( -0.787445, -0.15749 )
 texture = ExtResource( 1 )
-flip_h = true
 hframes = 19
 frame = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2( -0.629951, 0.629427 )
 rotation = 1.5708
 shape = SubResource( 1 )
@@ -253,11 +322,9 @@ anims/SwimLeft = SubResource( 6 )
 anims/SwimRight = SubResource( 7 )
 
 [node name="ChompPivot" type="Position2D" parent="."]
-position = Vector2( -2, 0 )
-rotation = 3.14159
 
 [node name="ChomperArea" type="Area2D" parent="ChompPivot"]
-position = Vector2( -11.722, -0.215 )
+position = Vector2( -10.998, 0 )
 collision_layer = 0
 collision_mask = 4
 
@@ -265,4 +332,14 @@ collision_mask = 4
 shape = SubResource( 8 )
 disabled = true
 
+[node name="PoopTimer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="ButtPivot" type="Position2D" parent="."]
+
+[node name="ButtPosition" type="Node2D" parent="ButtPivot"]
+position = Vector2( 11.4875, 3.13733 )
+
 [connection signal="area_entered" from="ChompPivot/ChomperArea" to="." method="_on_ChomperArea_area_entered"]
+[connection signal="timeout" from="PoopTimer" to="." method="_on_PoopTimer_timeout"]

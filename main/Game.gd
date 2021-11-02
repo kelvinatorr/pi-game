@@ -14,6 +14,8 @@ var FOOD: Dictionary = {
 
 signal game_over()
 
+var poop_scene: PackedScene = preload("res://items/Poop.tscn")
+
 func _ready() -> void:
 	$EnergyTimer.start()
 
@@ -72,3 +74,7 @@ func generate_food(food_data: Dictionary) -> void:
 	food.position = spawn_point
 	add_child_below_node($Player, food)
 
+func _on_Player_pooping(butt_global_pos):
+	var poop: RigidBody2D = poop_scene.instance()
+	add_child(poop)
+	poop.global_position = butt_global_pos

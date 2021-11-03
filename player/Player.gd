@@ -106,14 +106,15 @@ func game_over_sequence() -> void:
 
 func _on_ChomperArea_area_entered(area: Area2D):
 	var food: Node2D = area.get_parent()
-	# Spawn Heart Above Head
-	var heart: Sprite = heart_scene.instance()
-	add_child(heart)
-	heart.global_position = chomper_area.global_position
-	var float_direction: int = -1
-	if abs(chomp_pivot.rotation_degrees) < 90:
-		float_direction = 1
-	heart.float_up_left_and_free(float_direction)
+	if food.show_heart:
+		# Spawn Heart Above Head
+		var heart: Sprite = heart_scene.instance()
+		add_child(heart)
+		heart.global_position = chomper_area.global_position
+		var float_direction: int = -1
+		if abs(chomp_pivot.rotation_degrees) < 90:
+			float_direction = 1
+		heart.float_up_left_and_free(float_direction)
 	# Emit Chomp Success
 	emit_signal("chomp_success", food.ENERGY_VALUE)
 
@@ -123,8 +124,6 @@ func _on_PoopTimer_timeout():
 	var flip_result: float = rand_range(0, 1)
 	if flip_result >= 0.5:
 		return
-	
-	print('Pooping!')
+
 	emit_signal("pooping", butt_position.global_position)
-	
-	
+

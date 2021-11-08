@@ -13,7 +13,9 @@ var heart_scene: PackedScene = preload("res://items/Heart.tscn")
 
 enum State {
 	MOVE,
-	CHOMP
+	CHOMP,
+	IDLE,
+	PENSIVE
 }
 
 signal movement(energy_consumption)
@@ -25,23 +27,45 @@ onready var chomp_collision_shape: CollisionShape2D = $ChompPivot/ChomperArea/Co
 onready var chomper_area: Area2D = $ChompPivot/ChomperArea
 onready var chomp_pivot: Position2D = $ChompPivot
 onready var butt_position: Node2D = $ButtPivot/ButtPosition
+onready var idle_timer: Timer = $IdleTimer
 
 func _physics_process(delta: float) -> void:
 	if game_over:
 		sink_to_bottom(delta)
 		return
+	var input_vector: Vector2 = get_input()
+	
+	if input_vector != Vector2.ZERO:
+		state = State.MOVE
+	else:
+		if velocity == Vector2.ZERO and state != State.PENSIVE:
+			state = State.IDLE
+	
+	if Input.is_action_just_pressed("chomp"):
+		state = State.CHOMP
+	
+	if state != State.IDLE and !idle_timer.is_stopped():
+		print('Stopping the idle timer')
+		idle_timer.stop()
+
 	match state:
 		State.MOVE:
-			move_state(delta)
+			move_state(delta, input_vector)
 		State.CHOMP:
 			chomp_state()
+		State.IDLE:
+			idle_state()
+		State.PENSIVE:
+			pensive_state()
 
-func move_state(delta):
+func get_input() -> Vector2:
 	var input_vector: Vector2 = Vector2.ZERO
 	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 	input_vector.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 	input_vector = input_vector.normalized()
+	return input_vector
 
+func move_state(delta: float, input_vector: Vector2):
 	if input_vector != Vector2.ZERO:
 		if input_vector.x > 0:
 			animation_player.play("SwimRight")
@@ -72,9 +96,14 @@ func move_state(delta):
 	# Get the velocity back so that if a collision happened then it is retained and we can change 
 	# directions faster
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
-	
-	if Input.is_action_just_pressed("chomp"):
-		state = State.CHOMP
+
+func pensive_state() -> void:
+	$Sprite.frame = 11 
+
+func idle_state() -> void:
+	if idle_timer.is_stopped():
+		idle_timer.start()
+		print('Starting timer ', idle_timer.time_left)
 
 func chomp_state() -> void:
 	velocity = Vector2.ZERO
@@ -86,7 +115,6 @@ func chomp_state() -> void:
 	# Resume execution when animation is done playing.
 	yield(animation_player, "animation_finished")
 	chomp_collision_shape.disabled = true
-	state = State.MOVE
 
 func sink_to_bottom(delta: float) -> void:
 	if self.is_on_floor():
@@ -127,3 +155,5 @@ func _on_PoopTimer_timeout():
 
 	emit_signal("pooping", butt_position.global_position)
 
+func _on_IdleTimer_timeout() -> void:
+	state = State.PENSIVE

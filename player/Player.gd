@@ -6,7 +6,7 @@ export var FRICTION: int = 100
 export var MOVEMENT_ENERGY_CONSUMPTION: int = 1
 
 var velocity: Vector2 = Vector2.ZERO
-var moving_left: bool = false
+var moving_left: bool = true
 var game_over: bool = false
 var state: int = State.MOVE
 var heart_scene: PackedScene = preload("res://items/Heart.tscn")

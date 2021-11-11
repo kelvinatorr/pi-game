@@ -98,7 +98,9 @@ func move_state(delta: float, input_vector: Vector2):
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
 
 func pensive_state() -> void:
-	$Sprite.frame = 11 
+	$Sprite.frame = 11
+	velocity = Vector2(0, sin(OS.get_ticks_msec() / 400.0) * 2.0)
+	velocity = move_and_slide(velocity, Vector2.UP)
 
 func idle_state() -> void:
 	if idle_timer.is_stopped():

@@ -16,7 +16,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 0.25, 0.25 ) ]
+"values": [ Vector2( 1, 1 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath(".:offset")
@@ -28,7 +28,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 ),
 "transitions": PoolRealArray( 0.378929, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( -10, -10 ), Vector2( -11, -11 ), Vector2( -12, -12 ), Vector2( -13, -13 ), Vector2( -14, -14 ), Vector2( -15, -15 ), Vector2( -16, -16 ), Vector2( -17, -17 ), Vector2( -18, -18 ) ]
+"values": [ Vector2( -5, -5 ), Vector2( -6, -6 ), Vector2( -7, -7 ), Vector2( -8, -8 ), Vector2( -9, -9 ), Vector2( -10, -10 ), Vector2( -11, -11 ), Vector2( -12, -12 ), Vector2( -13, -13 ) ]
 }
 
 [sub_resource type="Animation" id=2]
@@ -44,7 +44,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 0.25, 0.25 ) ]
+"values": [ Vector2( 1, 1 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath(".:offset")
@@ -56,11 +56,10 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 ),
 "transitions": PoolRealArray( 0.378929, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( 10, -10 ), Vector2( 11, -11 ), Vector2( 12, -12 ), Vector2( 13, -13 ), Vector2( 14, -14 ), Vector2( 15, -15 ), Vector2( 16, -16 ), Vector2( 17, -17 ), Vector2( 18, -18 ) ]
+"values": [ Vector2( 5, -5 ), Vector2( 6, -6 ), Vector2( 7, -7 ), Vector2( 8, -8 ), Vector2( 9, -9 ), Vector2( 10, -10 ), Vector2( 11, -11 ), Vector2( 12, -12 ), Vector2( 13, -13 ) ]
 }
 
 [node name="Heart" type="Sprite"]
-scale = Vector2( 0.25, 0.25 )
 texture = ExtResource( 1 )
 script = ExtResource( 2 )
 

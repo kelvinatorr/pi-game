@@ -111,9 +111,11 @@ func chomp_state() -> void:
 	velocity = Vector2.ZERO
 	chomp_collision_shape.disabled = false
 	if !moving_left:
+		chomp_pivot.rotation_degrees = 180
 		animation_player.play("ChompRight")
 	else:
-		animation_player.play("ChompLeft")
+		chomp_pivot.rotation_degrees = 0
+		animation_player.play("ChompLeft")	
 	# Resume execution when animation is done playing.
 	yield(animation_player, "animation_finished")
 	chomp_collision_shape.disabled = true

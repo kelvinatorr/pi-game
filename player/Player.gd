@@ -134,20 +134,15 @@ func game_over_sequence() -> void:
 	animation_player.stop()
 	$Sprite.frame = 8
 
-func _on_ChomperArea_area_entered(area: Area2D):
-	var food: Node2D = area.get_parent()
-	if food.show_heart:
-		# Spawn Heart Above Head
-		var heart: Sprite = heart_scene.instance()
-		add_child(heart)
-		heart.global_position = chomper_area.global_position
-		var float_direction: int = -1
-		if abs(chomp_pivot.rotation_degrees) < 90:
-			float_direction = 1
-		heart.float_up_left_and_free(float_direction)
-	# Emit Chomp Success
-	emit_signal("chomp_success", food.ENERGY_VALUE)
-
+func show_heart():
+	# Spawn Heart Above Head
+	var heart: Sprite = heart_scene.instance()
+	add_child(heart)
+	heart.global_position = chomper_area.global_position
+	var float_direction: int = -1
+	if abs(chomp_pivot.rotation_degrees) < 90:
+		float_direction = 1
+	heart.float_up_left_and_free(float_direction)
 
 func _on_PoopTimer_timeout():
 	# Toss coin, if tails (less than 0.5) she poops

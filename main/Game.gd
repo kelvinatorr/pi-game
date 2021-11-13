@@ -28,7 +28,7 @@ func _on_Player_movement(energy_consumption) -> void:
 func _on_Player_chomp_success(energy_value: int):
 	increase_energy(energy_value)
 
-func increase_energy(val: int) -> void:	
+func increase_energy(val: int) -> void:
 	if turtle_energy >= MAX_TURTLE_ENERGY:
 		return
 	turtle_energy += val
@@ -73,8 +73,15 @@ func generate_food(food_data: Dictionary) -> void:
 	var food: Node2D = load(food_data.path).instance()
 	food.position = spawn_point
 	add_child_below_node($Player, food)
+	food.connect("chomped", self, "_on_food_chomped")
 
 func _on_Player_pooping(butt_global_pos):
 	var poop: RigidBody2D = poop_scene.instance()
 	add_child(poop)
 	poop.global_position = butt_global_pos
+	poop.connect("chomped", self, "_on_food_chomped")
+
+func _on_food_chomped(energy_value: int, show_heart: bool):
+	increase_energy(energy_value)
+	if show_heart:
+		$Player.show_heart()

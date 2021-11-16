@@ -15,12 +15,15 @@ enum State {
 	MOVE,
 	CHOMP,
 	IDLE,
-	PENSIVE
+	PENSIVE,
+	SLEEP
 }
 
 signal movement(energy_consumption)
 signal chomp_success(energy_value)
 signal pooping(butt_global_pos)
+signal sleeping()
+signal woke_up()
 
 onready var animation_player: AnimationPlayer = $AnimationPlayer
 onready var chomp_collision_shape: CollisionShape2D = $ChompPivot/ChomperArea/CollisionShape2D
@@ -28,6 +31,8 @@ onready var chomper_area: Area2D = $ChompPivot/ChomperArea
 onready var chomp_pivot: Position2D = $ChompPivot
 onready var butt_position: Node2D = $ButtPivot/ButtPosition
 onready var idle_timer: Timer = $IdleTimer
+onready var pensive_timer: Timer = $PensiveTimer
+onready var poop_timer: Timer = $PoopTimer
 
 func _physics_process(delta: float) -> void:
 	if game_over:
@@ -36,17 +41,26 @@ func _physics_process(delta: float) -> void:
 	var input_vector: Vector2 = get_input()
 	
 	if input_vector != Vector2.ZERO:
+		if state == State.SLEEP:
+			emit_signal("woke_up")
 		state = State.MOVE
 	else:
-		if velocity == Vector2.ZERO and state != State.PENSIVE:
+		if velocity == Vector2.ZERO and state != State.PENSIVE and state != State.SLEEP:
 			state = State.IDLE
 	
 	if Input.is_action_just_pressed("chomp"):
+		if state == State.SLEEP:
+			emit_signal("woke_up")
 		state = State.CHOMP
 	
 	if state != State.IDLE and !idle_timer.is_stopped():
-		print('Stopping the idle timer')
 		idle_timer.stop()
+	
+	if state != State.PENSIVE and !pensive_timer.is_stopped():
+		pensive_timer.stop()
+	
+	if state != State.SLEEP and poop_timer.is_stopped():
+		poop_timer.start()
 
 	match state:
 		State.MOVE:
@@ -57,6 +71,8 @@ func _physics_process(delta: float) -> void:
 			idle_state()
 		State.PENSIVE:
 			pensive_state()
+		State.SLEEP:
+			sleep_state(delta)
 
 func get_input() -> Vector2:
 	var input_vector: Vector2 = Vector2.ZERO
@@ -97,15 +113,24 @@ func move_state(delta: float, input_vector: Vector2):
 	# directions faster
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
 
+func sleep_state(delta: float) -> void:
+	sink_to_bottom(delta)
+	if !moving_left:
+		animation_player.play("SleepRight")
+	else:
+		animation_player.play("SleepLeft")
+	poop_timer.stop()
+
 func pensive_state() -> void:
 	$Sprite.frame = 11
 	velocity = Vector2(0, sin(OS.get_ticks_msec() / 400.0) * 2.0)
 	velocity = move_and_slide(velocity, Vector2.UP)
+	if pensive_timer.is_stopped():
+		pensive_timer.start()
 
 func idle_state() -> void:
 	if idle_timer.is_stopped():
 		idle_timer.start()
-		print('Starting timer ', idle_timer.time_left)
 
 func chomp_state() -> void:
 	velocity = Vector2.ZERO
@@ -115,7 +140,7 @@ func chomp_state() -> void:
 		animation_player.play("ChompRight")
 	else:
 		chomp_pivot.rotation_degrees = 0
-		animation_player.play("ChompLeft")	
+		animation_player.play("ChompLeft")
 	# Resume execution when animation is done playing.
 	yield(animation_player, "animation_finished")
 	chomp_collision_shape.disabled = true
@@ -131,7 +156,7 @@ func game_over_sequence() -> void:
 	# Stop movement from controls
 	game_over = true
 	# Stop Poop timer so she doesn't continue to poop
-	$PoopTimer.stop()
+	poop_timer.stop()
 	# Show closed eyes frame
 	animation_player.stop()
 	$Sprite.frame = 8
@@ -156,3 +181,8 @@ func _on_PoopTimer_timeout():
 
 func _on_IdleTimer_timeout() -> void:
 	state = State.PENSIVE
+
+
+func _on_PensiveTimer_timeout() -> void:
+	emit_signal("sleeping")
+	state = State.SLEEP

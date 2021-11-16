@@ -85,3 +85,12 @@ func _on_food_chomped(energy_value: int, show_heart: bool):
 	increase_energy(energy_value)
 	if show_heart:
 		$Player.show_heart()
+
+
+func _on_Player_sleeping() -> void:
+	$EnergyTimer.wait_time = 10
+
+
+func _on_Player_woke_up() -> void:
+	if $EnergyTimer.wait_time != 1:
+		$EnergyTimer.wait_time = 1

@@ -1,0 +1,5 @@
+[gd_scene format=2]
+
+[node name="IdleTimer" type="Timer"]
+wait_time = 10.0
+one_shot = true

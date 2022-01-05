@@ -5,6 +5,9 @@ export var MAX_SPEED: int = 250
 export var FRICTION: int = 100
 export var MOVEMENT_ENERGY_CONSUMPTION: int = 1
 
+onready var animation_tree: AnimationTree = $AnimationTree
+onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
+
 func _physics_process(delta: float) -> void:
 	if game_over:
 		return
@@ -35,11 +38,15 @@ func _physics_process(delta: float) -> void:
 			sleep_state(delta)
 
 func move_state(delta: float, input_vector: Vector2):
-	if input_vector != Vector2.ZERO:		
+	if input_vector != Vector2.ZERO:
+		animation_tree.set("parameters/Idle/blend_position", input_vector)
+		animation_tree.set("parameters/Crawl/blend_position", input_vector)
+		animation_state.travel("Crawl")
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
 		# Emit movement signal
 		emit_signal("movement", MOVEMENT_ENERGY_CONSUMPTION)
 	else:
+		animation_state.travel("Idle")
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 
 	# Get the velocity back so that if a collision happened then it is retained and we can change 

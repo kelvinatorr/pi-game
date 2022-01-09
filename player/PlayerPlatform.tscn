@@ -126,7 +126,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id=7]
 resource_name = "IdleDown"
-length = 0.1
+length = 10.0
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -135,10 +135,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 9.8 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ 2 ]
+"values": [ 2, 1 ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Sprite:flip_h")
@@ -155,7 +155,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id=9]
 resource_name = "IdleLeft"
-length = 0.1
+length = 10.0
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -164,10 +164,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 9.8 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ 24 ]
+"values": [ 24, 25 ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Sprite:flip_h")
@@ -184,7 +184,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id=10]
 resource_name = "IdleRight"
-length = 0.1
+length = 10.0
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -193,10 +193,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 9.8 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ 24 ]
+"values": [ 24, 25 ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Sprite:flip_h")

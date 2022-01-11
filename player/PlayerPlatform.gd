@@ -35,12 +35,13 @@ func _physics_process(delta: float) -> void:
 		State.PENSIVE:
 			pensive_state()
 		State.SLEEP:
-			sleep_state(delta)
+			sleep_state(input_vector)
 
 func move_state(delta: float, input_vector: Vector2):
 	if input_vector != Vector2.ZERO:
 		animation_tree.set("parameters/Idle/blend_position", input_vector)
 		animation_tree.set("parameters/Crawl/blend_position", input_vector)
+		animation_tree.set("parameters/Sleep/blend_position", input_vector)
 		animation_state.travel("Crawl")
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
 		# Emit movement signal
@@ -53,11 +54,16 @@ func move_state(delta: float, input_vector: Vector2):
 	# directions faster
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
 
-func idle_state():
-	print("Idle state!")
+func idle_state() -> void:
+	if idle_timer.is_stopped():
+		idle_timer.start()
 
 func pensive_state():
 	print("Pensive state!")
 
-func sleep_state(delta: float):
-	print("Sleep state!")
+func sleep_state(input_vector: Vector2) -> void:
+	animation_state.travel("Sleep")
+
+func _on_IdleTimer_timeout() -> void:
+	emit_signal("sleeping")
+	state = State.SLEEP

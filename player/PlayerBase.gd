@@ -13,6 +13,7 @@ enum State {
 }
 
 signal movement(energy_consumption)
+signal sleeping()
 signal woke_up()
 
 

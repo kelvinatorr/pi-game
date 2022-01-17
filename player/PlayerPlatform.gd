@@ -12,7 +12,7 @@ func _physics_process(delta: float) -> void:
 	if game_over:
 		return
 	var input_vector: Vector2 = get_input()
-	
+
 	if input_vector != Vector2.ZERO:
 		if state == State.SLEEP:
 			emit_signal("woke_up")
@@ -32,16 +32,15 @@ func _physics_process(delta: float) -> void:
 			move_state(delta, input_vector)
 		State.IDLE:
 			idle_state()
-		State.PENSIVE:
-			pensive_state()
 		State.SLEEP:
-			sleep_state(input_vector)
+			sleep_state()
 
 func move_state(delta: float, input_vector: Vector2):
 	if input_vector != Vector2.ZERO:
 		animation_tree.set("parameters/Idle/blend_position", input_vector)
 		animation_tree.set("parameters/Crawl/blend_position", input_vector)
 		animation_tree.set("parameters/Sleep/blend_position", input_vector)
+		animation_tree.set("parameters/Annoyed/blend_position", input_vector)
 		animation_state.travel("Crawl")
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
 		# Emit movement signal
@@ -54,16 +53,22 @@ func move_state(delta: float, input_vector: Vector2):
 	# directions faster
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
 
+func poked():
+	animation_state.travel("Annoyed")
+	state = State.IDLE
+
 func idle_state() -> void:
 	if idle_timer.is_stopped():
 		idle_timer.start()
 
-func pensive_state():
-	print("Pensive state!")
-
-func sleep_state(input_vector: Vector2) -> void:
+func sleep_state() -> void:
 	animation_state.travel("Sleep")
 
 func _on_IdleTimer_timeout() -> void:
 	emit_signal("sleeping")
 	state = State.SLEEP
+
+
+func _on_TouchArea_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if event.is_action_pressed("poke"):
+		poked()

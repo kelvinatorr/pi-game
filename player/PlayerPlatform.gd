@@ -9,6 +9,8 @@ onready var animation_tree: AnimationTree = $AnimationTree
 onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
 onready var touch_area_lat: CollisionShape2D = $TouchArea/LateralCS2D
 onready var touch_area_long: CollisionShape2D = $TouchArea/LongitudinalCS2D2
+onready var collide_area_lat: CollisionShape2D = $LateralCollisionShape
+onready var collide_area_long: CollisionShape2D = $LongitudinalCollisionShape
 
 func _ready() -> void:
 	var ready_blend_position: Vector2 = animation_tree.get("parameters/Idle/blend_position")
@@ -65,12 +67,18 @@ func activate_shape(input_vector: Vector2) -> void:
 	if iv.x > iv.y:
 		touch_area_lat.disabled = false
 		touch_area_long.disabled = true
+		collide_area_lat.disabled = false
+		collide_area_long.disabled = true
 	elif iv.x < iv.y:
 		touch_area_lat.disabled = true
 		touch_area_long.disabled = false
+		collide_area_lat.disabled = true
+		collide_area_long.disabled = false
 	else:
 		touch_area_lat.disabled = false
 		touch_area_long.disabled = true
+		collide_area_lat.disabled = false
+		collide_area_long.disabled = true
 
 func poked() -> void:
 	animation_state.travel("Annoyed")

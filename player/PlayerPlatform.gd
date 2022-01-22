@@ -7,6 +7,12 @@ export var MOVEMENT_ENERGY_CONSUMPTION: int = 1
 
 onready var animation_tree: AnimationTree = $AnimationTree
 onready var animation_state: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/playback")
+onready var touch_area_lat: CollisionShape2D = $TouchArea/LateralCS2D
+onready var touch_area_long: CollisionShape2D = $TouchArea/LongitudinalCS2D2
+
+func _ready() -> void:
+	var ready_blend_position: Vector2 = animation_tree.get("parameters/Idle/blend_position")
+	activate_shape(ready_blend_position)
 
 func _physics_process(delta: float) -> void:
 	if game_over:
@@ -45,6 +51,7 @@ func move_state(delta: float, input_vector: Vector2):
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
 		# Emit movement signal
 		emit_signal("movement", MOVEMENT_ENERGY_CONSUMPTION)
+		activate_shape(input_vector)
 	else:
 		animation_state.travel("Idle")
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
@@ -53,7 +60,19 @@ func move_state(delta: float, input_vector: Vector2):
 	# directions faster
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
 
-func poked():
+func activate_shape(input_vector: Vector2) -> void:
+	var iv: Vector2 = input_vector.abs()
+	if iv.x > iv.y:
+		touch_area_lat.disabled = false
+		touch_area_long.disabled = true
+	elif iv.x < iv.y:
+		touch_area_lat.disabled = true
+		touch_area_long.disabled = false
+	else:
+		touch_area_lat.disabled = false
+		touch_area_long.disabled = true
+
+func poked() -> void:
 	animation_state.travel("Annoyed")
 	state = State.IDLE
 

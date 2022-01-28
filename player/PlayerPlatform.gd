@@ -1,8 +1,8 @@
 extends "res://player/PlayerBase.gd"
 
-export var ACCELERATION: int = 150
-export var MAX_SPEED: int = 250
-export var FRICTION: int = 100
+export var ACCELERATION: int = 30
+export var MAX_SPEED: int = 60
+export var FRICTION: int = 300
 export var MOVEMENT_ENERGY_CONSUMPTION: int = 1
 
 onready var animation_tree: AnimationTree = $AnimationTree
@@ -11,6 +11,8 @@ onready var touch_area_lat: CollisionShape2D = $TouchArea/LateralCS2D
 onready var touch_area_long: CollisionShape2D = $TouchArea/LongitudinalCS2D2
 onready var collide_area_lat: CollisionShape2D = $LateralCollisionShape
 onready var collide_area_long: CollisionShape2D = $LongitudinalCollisionShape
+
+var last_input_vector: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	var ready_blend_position: Vector2 = animation_tree.get("parameters/Idle/blend_position")
@@ -59,7 +61,10 @@ func move_state(delta: float, input_vector: Vector2):
 		animation_tree.set("parameters/Annoyed/blend_position", input_vector)
 		animation_tree.set("parameters/Hide/blend_position", input_vector)
 		animation_state.travel("Crawl")
-		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
+		if not changed_dir(input_vector):
+			velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
+		else:
+			velocity = Vector2.ZERO
 		# Emit movement signal
 		emit_signal("movement", MOVEMENT_ENERGY_CONSUMPTION)
 		activate_shape(input_vector)
@@ -67,9 +72,19 @@ func move_state(delta: float, input_vector: Vector2):
 		animation_state.travel("Idle")
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 
+	last_input_vector = input_vector
 	# Get the velocity back so that if a collision happened then it is retained and we can change 
 	# directions faster
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
+
+func changed_dir(input_vector: Vector2) -> bool:
+	if ((input_vector.x < 0 and last_input_vector.x >= 0) 
+		or (input_vector.x > 0 and last_input_vector.x <= 0)):
+		return true
+	if ((input_vector.y < 0 and last_input_vector.y >= 0) 
+		or (input_vector.y > 0 and last_input_vector.y <= 0)):
+		return true
+	return false
 
 func activate_shape(input_vector: Vector2) -> void:
 	var iv: Vector2 = input_vector.abs()

@@ -26,8 +26,14 @@ func _physics_process(delta: float) -> void:
 			emit_signal("woke_up")
 		state = State.MOVE
 	else:
-		if velocity == Vector2.ZERO and state != State.PENSIVE and state != State.SLEEP:
+		if (velocity == Vector2.ZERO and state != State.PENSIVE and state != State.SLEEP 
+			and state != State.HIDE):
 			state = State.IDLE
+	
+	if Input.is_action_just_pressed("feed_shrimp"):
+		state = State.HIDE
+	if state == State.HIDE and Input.is_action_just_released("feed_shrimp"):
+		state = State.IDLE
 	
 	if state != State.IDLE and !idle_timer.is_stopped():
 		idle_timer.stop()
@@ -42,6 +48,8 @@ func _physics_process(delta: float) -> void:
 			idle_state()
 		State.SLEEP:
 			sleep_state()
+		State.HIDE:
+			hide()
 
 func move_state(delta: float, input_vector: Vector2):
 	if input_vector != Vector2.ZERO:
@@ -49,6 +57,7 @@ func move_state(delta: float, input_vector: Vector2):
 		animation_tree.set("parameters/Crawl/blend_position", input_vector)
 		animation_tree.set("parameters/Sleep/blend_position", input_vector)
 		animation_tree.set("parameters/Annoyed/blend_position", input_vector)
+		animation_tree.set("parameters/Hide/blend_position", input_vector)
 		animation_state.travel("Crawl")
 		velocity = velocity.move_toward(input_vector * MAX_SPEED, ACCELERATION * delta)
 		# Emit movement signal
@@ -81,10 +90,17 @@ func activate_shape(input_vector: Vector2) -> void:
 		collide_area_long.disabled = true
 
 func poked() -> void:
+	if state == State.HIDE:
+		return
 	animation_state.travel("Annoyed")
 	state = State.IDLE
 
+func hide() -> void:
+	animation_state.travel("Hide")
+
 func idle_state() -> void:
+	if animation_state.get_current_node() != "Idle":
+		animation_state.travel("Idle")
 	if idle_timer.is_stopped():
 		idle_timer.start()
 

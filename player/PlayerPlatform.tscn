@@ -1,4 +1,4 @@
-[gd_scene load_steps=55 format=2]
+[gd_scene load_steps=62 format=2]
 
 [ext_resource path="res://player/turtle-topview-animated-32x32.png" type="Texture" id=1]
 [ext_resource path="res://player/PlayerPlatform.gd" type="Script" id=2]
@@ -660,6 +660,31 @@ min_space = Vector2( -1, -1.1 )
 max_space = Vector2( 1, 1.1 )
 blend_mode = 1
 
+[sub_resource type="AnimationNodeAnimation" id=56]
+animation = "HideLeft"
+
+[sub_resource type="AnimationNodeAnimation" id=57]
+animation = "HideDown"
+
+[sub_resource type="AnimationNodeAnimation" id=58]
+animation = "HideRight"
+
+[sub_resource type="AnimationNodeAnimation" id=59]
+animation = "HideUp"
+
+[sub_resource type="AnimationNodeBlendSpace2D" id=60]
+blend_point_0/node = SubResource( 56 )
+blend_point_0/pos = Vector2( -1, 0 )
+blend_point_1/node = SubResource( 57 )
+blend_point_1/pos = Vector2( 0, 1.1 )
+blend_point_2/node = SubResource( 58 )
+blend_point_2/pos = Vector2( 1, 0 )
+blend_point_3/node = SubResource( 59 )
+blend_point_3/pos = Vector2( 0, -1.1 )
+min_space = Vector2( -1, -1.1 )
+max_space = Vector2( 1, 1.1 )
+blend_mode = 1
+
 [sub_resource type="AnimationNodeAnimation" id=16]
 animation = "IdleLeft"
 
@@ -718,16 +743,22 @@ auto_advance = true
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=51]
 
+[sub_resource type="AnimationNodeStateMachineTransition" id=61]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=62]
+
 [sub_resource type="AnimationNodeStateMachine" id=21]
 states/Annoyed/node = SubResource( 48 )
 states/Annoyed/position = Vector2( 501, 285 )
 states/Crawl/node = SubResource( 15 )
 states/Crawl/position = Vector2( 649, 139 )
+states/Hide/node = SubResource( 60 )
+states/Hide/position = Vector2( 701, 237 )
 states/Idle/node = SubResource( 20 )
 states/Idle/position = Vector2( 464, 164 )
 states/Sleep/node = SubResource( 33 )
 states/Sleep/position = Vector2( 310, 210 )
-transitions = [ "Idle", "Annoyed", SubResource( 49 ), "Annoyed", "Idle", SubResource( 50 ), "Sleep", "Annoyed", SubResource( 51 ) ]
+transitions = [ "Idle", "Annoyed", SubResource( 49 ), "Annoyed", "Idle", SubResource( 50 ), "Sleep", "Annoyed", SubResource( 51 ), "Idle", "Hide", SubResource( 61 ), "Hide", "Idle", SubResource( 62 ) ]
 start_node = "Idle"
 graph_offset = Vector2( -46, 78 )
 
@@ -788,6 +819,7 @@ active = true
 parameters/playback = SubResource( 22 )
 parameters/Annoyed/blend_position = Vector2( 0, 0 )
 parameters/Crawl/blend_position = Vector2( 0, 0 )
+parameters/Hide/blend_position = Vector2( 0, 0 )
 parameters/Idle/blend_position = Vector2( 0, 0 )
 parameters/Sleep/blend_position = Vector2( 0, 0 )
 

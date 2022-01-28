@@ -9,7 +9,8 @@ enum State {
 	MOVE,
 	IDLE,
 	PENSIVE,
-	SLEEP
+	SLEEP,
+	HIDE
 }
 
 signal movement(energy_consumption)

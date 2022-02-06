@@ -1,8 +1,7 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://world/background-platform-320x180.png" type="Texture" id=1]
 [ext_resource path="res://world/world-border-tile.png" type="Texture" id=2]
-[ext_resource path="res://player/PlayerPlatform.tscn" type="PackedScene" id=3]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 8, 0, 8, 8, 0, 8 )
@@ -96,6 +95,3 @@ texture = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="PlayerPlatform" parent="." instance=ExtResource( 3 )]
-position = Vector2( 82, 101 )

@@ -20,10 +20,10 @@ enum State {
 }
 
 signal movement(energy_consumption)
-signal chomp_success(energy_value)
 signal pooping(butt_global_pos)
 signal sleeping()
 signal woke_up()
+signal surfaced()
 
 onready var animation_player: AnimationPlayer = $AnimationPlayer
 onready var chomp_collision_shape: CollisionShape2D = $ChompPivot/ChomperArea/CollisionShape2D
@@ -112,6 +112,9 @@ func move_state(delta: float, input_vector: Vector2):
 	# Get the velocity back so that if a collision happened then it is retained and we can change 
 	# directions faster
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
+	
+	if self.is_on_ceiling():
+		emit_signal("surfaced")
 
 func sleep_state(delta: float) -> void:
 	sink_to_bottom(delta)

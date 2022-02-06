@@ -31,3 +31,12 @@ func get_input() -> Vector2:
 	input_vector.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 	input_vector = input_vector.normalized()
 	return input_vector
+
+func get_which_wall_collided() -> int:
+	for i in range(self.get_slide_count()):
+		var collision = self.get_slide_collision(i)
+		if collision.normal.x > 0:
+			return 0
+		elif collision.normal.x < 0:
+			return 1
+	return 0

@@ -15,18 +15,16 @@ var FOOD: Dictionary = {
 signal game_over()
 
 var poop_scene: PackedScene = preload("res://items/Poop.tscn")
+var surface_scene: PackedScene = preload('res://world/TankPlatform.tscn')
+var surface_player_scene: PackedScene = preload('res://player/PlayerPlatform.tscn')
+var underwater_scene: PackedScene = preload('res://world/TankUnderwater.tscn')
+var underwater_player_scene: PackedScene = preload('res://player/Player.tscn')
 
 func _ready() -> void:
 	$EnergyTimer.start()
 
 func _on_EnergyTimer_timeout() -> void:
 	reduce_energy(energy_per_second)
-
-func _on_Player_movement(energy_consumption) -> void:
-	reduce_energy(energy_consumption)
-
-func _on_Player_chomp_success(energy_value: int):
-	increase_energy(energy_value)
 
 func increase_energy(val: int) -> void:
 	if turtle_energy >= MAX_TURTLE_ENERGY:
@@ -86,11 +84,45 @@ func _on_food_chomped(energy_value: int, show_heart: bool):
 	if show_heart:
 		$Player.show_heart()
 
+func _on_Player_movement(energy_consumption) -> void:
+	reduce_energy(energy_consumption)
 
 func _on_Player_sleeping() -> void:
 	$EnergyTimer.wait_time = 10
 
-
 func _on_Player_woke_up() -> void:
 	if $EnergyTimer.wait_time != 1:
 		$EnergyTimer.wait_time = 1
+
+func _on_Player_surfaced() -> void:
+	# Change level to surface scene
+	# Remove underwater scene
+	$TankUnderwater.queue_free()
+	# Remove player
+	$Player.queue_free()
+	# TODO: queue free all food and poops too
+#	for m in get_tree().get_nodes_in_group("item"):
+#		print(m)
+	# Load surface scene
+	add_child(surface_scene.instance())
+	# Add player platform
+	var surface_player: KinematicBody2D = surface_player_scene.instance()
+	surface_player.connect('slid_down_ramp', self, '_on_Player_slid_ramp')
+	add_child(surface_player)
+
+func _on_Player_slid_ramp() -> void:
+	# Change level to underwater scene
+	# Remove platform scene
+	$TankPlatform.queue_free()
+	# Remove player platform
+	$PlayerPlatform.queue_free()
+	# Load underwater scene
+	add_child(underwater_scene.instance())
+	# Add player
+	var underwater_player: KinematicBody2D = underwater_player_scene.instance()
+	underwater_player.connect('pooping', self, '_on_Player_pooping')
+	underwater_player.connect('movement', self, '_on_Player_movement')
+	underwater_player.connect('sleeping', self, '_on_Player_sleeping')
+	underwater_player.connect('woke_up', self, '_on_Player_woke_up')
+	underwater_player.connect('surfaced', self, '_on_Player_surfaced')
+	add_child(underwater_player)

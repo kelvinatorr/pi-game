@@ -14,6 +14,8 @@ onready var collide_area_long: CollisionShape2D = $LongitudinalCollisionShape
 
 var last_input_vector: Vector2 = Vector2.ZERO
 
+signal slid_down_ramp()
+
 func _ready() -> void:
 	var ready_blend_position: Vector2 = animation_tree.get("parameters/Idle/blend_position")
 	activate_shape(ready_blend_position)
@@ -76,6 +78,11 @@ func move_state(delta: float, input_vector: Vector2):
 	# Get the velocity back so that if a collision happened then it is retained and we can change 
 	# directions faster
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
+	
+	if self.is_on_wall():
+		# Check if collided with right wall
+		if self.get_which_wall_collided():
+			emit_signal("slid_down_ramp")
 
 func changed_dir(input_vector: Vector2) -> bool:
 	if ((input_vector.x < 0 and last_input_vector.x >= 0) 

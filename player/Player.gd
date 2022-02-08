@@ -114,7 +114,11 @@ func move_state(delta: float, input_vector: Vector2):
 	velocity = move_and_slide(velocity, Vector2.UP) # Vector2.UP is Vector2(0, -1), pointing up
 	
 	if self.is_on_ceiling():
-		emit_signal("surfaced")
+		for i in get_slide_count():
+			var collision: KinematicCollision2D = get_slide_collision(i)
+			if collision.collider.name == "Surface":
+				emit_signal("surfaced")
+				return
 
 func sleep_state(delta: float) -> void:
 	sink_to_bottom(delta)

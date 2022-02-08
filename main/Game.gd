@@ -125,4 +125,5 @@ func _on_Player_slid_ramp() -> void:
 	underwater_player.connect('sleeping', self, '_on_Player_sleeping')
 	underwater_player.connect('woke_up', self, '_on_Player_woke_up')
 	underwater_player.connect('surfaced', self, '_on_Player_surfaced')
+	underwater_player.position = Vector2(10, 10)
 	add_child(underwater_player)

@@ -137,3 +137,12 @@ func _on_IdleTimer_timeout() -> void:
 func _on_TouchArea_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event.is_action_pressed("poke"):
 		poked()
+
+func game_over_sequence() -> void:
+	# Stop movement from controls
+	game_over = true
+	# Stop the idle timer
+	idle_timer.stop()
+	# Stop the pensive timer
+	pensive_timer.stop()
+	

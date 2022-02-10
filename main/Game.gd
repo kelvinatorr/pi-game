@@ -43,7 +43,10 @@ func reduce_energy(val: int) -> void:
 
 func game_over() -> void:
 	print('Game Over')
-	$Player.game_over_sequence()
+	if self.has_node("Player"):
+		$Player.game_over_sequence()
+	elif self.has_node("PlayerPlatform"):
+		$PlayerPlatform.game_over_sequence()
 	emit_signal("game_over")
 	$EnergyTimer.stop()
 	game_over = true

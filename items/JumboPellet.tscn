@@ -7,7 +7,7 @@
 radius = 2.43798
 height = 3.36933
 
-[node name="JumboPellet" type="KinematicBody2D"]
+[node name="JumboPellet" type="KinematicBody2D" groups=["item"]]
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]

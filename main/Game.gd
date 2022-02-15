@@ -8,8 +8,9 @@ var game_over: bool = false
 var FOOD: Dictionary = {
 	"Shrimp": {"path": "res://items/Shrimp.tscn"},
 	"Koi": {"path": "res://items/Koi.tscn"},
-	"Green_Pellet": {"path": "res://items/GreenPellet.tscn"},
-	"Jumbo_Pellet": {"path": "res://items/JumboPellet.tscn"},
+	"GreenPellet": {"path": "res://items/GreenPellet.tscn"},
+	"JumboPellet": {"path": "res://items/JumboPellet.tscn"},
+	"Poop": {"path": "res://items/Poop.tscn"},
 }
 
 signal game_over()
@@ -54,26 +55,28 @@ func game_over() -> void:
 func _physics_process(delta):
 	# get food button pressed
 	if Input.is_action_just_pressed("feed_shrimp"):
-		generate_food(FOOD["Shrimp"])
+		generate_food(FOOD["Shrimp"], null)
 	elif Input.is_action_just_pressed("feed_green_pellet"):
-		generate_food(FOOD["Green_Pellet"])
+		generate_food(FOOD["GreenPellet"], null)
 	elif Input.is_action_just_pressed("feed_koi"):
-		generate_food(FOOD["Koi"])
+		generate_food(FOOD["Koi"], null)
 	elif Input.is_action_just_pressed("feed_jumbo_pellet"):
-		generate_food(FOOD["Jumbo_Pellet"])
+		generate_food(FOOD["JumboPellet"], null)
 
-func generate_food(food_data: Dictionary) -> void:
+func generate_food(food_data: Dictionary, position) -> void:
 	# Check that TankUnderwater Level is loaded
 	var level: Node2D = get_node_or_null("TankUnderwater")
 	if not level:
 		return
-	# Generate a random vector for the food to spawn into
-	var spawn_point: Vector2 = Vector2(float(randi() % int(level.Food_Spawn_Vector.x) + 2), 
-		float(randi() % int(level.Food_Spawn_Vector.y) + 2))
+
+	if position == null:
+		# Generate a random vector for the food to spawn into
+		position = Vector2(float(randi() % int(level.Food_Spawn_Vector.x) + 2), 
+			float(randi() % int(level.Food_Spawn_Vector.y) + 2))
 
 	var food: Node2D = load(food_data.path).instance()
-	food.position = spawn_point
-	add_child_below_node($Player, food)
+	food.position = position
+	add_child_below_node($Player, food, true)
 	food.connect("chomped", self, "_on_food_chomped")
 
 func _on_Player_pooping(butt_global_pos):
@@ -97,15 +100,20 @@ func _on_Player_woke_up() -> void:
 	if $EnergyTimer.wait_time != 1:
 		$EnergyTimer.wait_time = 1
 
+var items_underwater: Array = []
+
 func _on_Player_surfaced() -> void:
 	# Change level to surface scene
 	# Remove underwater scene
 	$TankUnderwater.queue_free()
 	# Remove player
 	$Player.queue_free()
-	# TODO: queue free all food and poops too
-#	for m in get_tree().get_nodes_in_group("item"):
-#		print(m)
+	items_underwater = []
+	# queue free all food and poops too
+	for i in get_tree().get_nodes_in_group("item"):
+		var save_item: Array = [get_node_name(i), i.position]
+		items_underwater.append(save_item)
+		i.queue_free()
 	# Load surface scene
 	add_child(surface_scene.instance())
 	# Add player platform
@@ -130,3 +138,15 @@ func _on_Player_slid_ramp() -> void:
 	underwater_player.connect('surfaced', self, '_on_Player_surfaced')
 	underwater_player.position = Vector2(10, 10)
 	add_child(underwater_player)
+	# add items previously underwater
+	for i in items_underwater:
+		generate_food(FOOD[i[0]], i[1])
+
+
+func get_node_name(node: Node) -> String:
+	var regex = RegEx.new()
+	regex.compile("([a-zA-Z]+)")
+	var result: RegExMatch = regex.search(node.get_name())
+	if result:
+		return result.get_string()
+	return ""

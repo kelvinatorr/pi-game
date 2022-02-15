@@ -7,7 +7,7 @@
 radius = 1.49024
 height = 3.92201
 
-[node name="GreenPellet" type="KinematicBody2D"]
+[node name="GreenPellet" type="KinematicBody2D" groups=["item"]]
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]

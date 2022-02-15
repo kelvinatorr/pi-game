@@ -142,7 +142,6 @@ func _on_Player_slid_ramp() -> void:
 	for i in items_underwater:
 		generate_food(FOOD[i[0]], i[1])
 
-
 func get_node_name(node: Node) -> String:
 	var regex = RegEx.new()
 	regex.compile("([a-zA-Z]+)")

@@ -771,7 +771,7 @@ extents = Vector2( 8.40785, 14.7555 )
 extents = Vector2( 9.24307, 11.4146 )
 
 [node name="PlayerPlatform" type="KinematicBody2D"]
-position = Vector2( 82.6269, 57.2747 )
+position = Vector2( 299.287, 154.216 )
 input_pickable = true
 script = ExtResource( 2 )
 
